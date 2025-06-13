@@ -19,17 +19,9 @@
     </header>
     <main class="content">
         <div class="card">
-            <div class="score-counters">
-                <div class="counter">
-                    <div class="counter-icon">🐹</div>
-                    <div class="counter-text">Убито кротов:</div>
-                    <div id="dead" class="counter-value">0</div>
-                </div>
-                <div class="counter">
-                    <div class="counter-icon">❌</div>
-                    <div class="counter-text">Промахов:</div>
-                    <div id="lost" class="counter-value">0</div>
-                </div>
+            <div id="status" class="status">
+                Убито кротов: <span id="dead">0</span><br>
+                Промахов: <span id="lost">0</span><br>
             </div>
             <div class="hole-game">
                 <div class="hole hole_has-mole" id="hole1"></div>
