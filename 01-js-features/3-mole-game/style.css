@@ -32,13 +32,13 @@ body {
 }  
 
 .logo__link {  
-  width: 144px;  
+  width: 144px;
   height: 20px;  
   display: block;  
   background-image: url("../img/logo-color-text_6748e2.svg");  
   background-size: contain;  
   background-repeat: no-repeat;  
-  background-position: center;  
+  background-position: center;  update
 }  
 
 .content {  
@@ -48,7 +48,7 @@ body {
 }  
 
 .card {  
-  width: 400px;  
+  width: 600px;
   padding: 20px 30px;  
   margin: 0 auto 30px;  
   background-color: #fff;  
@@ -59,26 +59,61 @@ body {
   display: flex;  
   flex-wrap: wrap;  
   justify-content: space-around;  
-  width: 600px;  /* Общая ширина для игры */  
+  width: 600px;  /* Общая ширина для игры */
 }  
 
 .hole {  
   width: 150px;  
   height: 150px;  
-  background-color: gray;  
-  border: 1px solid #999;  
-  border-radius: 50%;  
   margin: 0 15px 30px;  
+  background: #8B4513;  
+  border-radius: 50%;  
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 10px 0 5px #5D2906, 
+              inset 0 -10px 15px rgba(0,0,0,0.4);
 }  
+
+.hole:hover {
+  transform: translateY(5px);
+}
+
+.hole:active {
+  transform: scale(0.95);
+}
 
 .hole.hole_has-mole {  
-  background-image: url(https://i.postimg.cc/rmtGV8h9/mole.png);  
-  background-position: center;  
+  background-color: #A0522D;
+  background-image: url('https://i.postimg.cc/rmtGV8h9/mole.png');  
+  background-size: 80%;  
   background-repeat: no-repeat;  
-  background-size: contain;  
-  background-color: brown !important;  
-}  
+  background-position: center 90%;
+  animation: moleAppear 0.3s ease-out;
+}
+
+@keyframes moleAppear {
+  from { 
+    background-position: center 150%;
+    opacity: 0;
+  }
+  to { 
+    background-position: center 90%;
+    opacity: 1;
+  }
+}
+
+.hit {
+  animation: hit 0.3s ease;
+}
+
+@keyframes hit {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
 
 .status {  
-  margin-bottom: 20px;  
+  margin-bottom: 20px;
 }

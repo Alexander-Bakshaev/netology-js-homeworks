@@ -1,10 +1,9 @@
 (() => {
-
     // Переменные для отслеживания состояния игры
     let playing = true,
-    activeHole = 1,
-    deadCount = 0,
-    lostCount = 0;
+        activeHole = 1,
+        deadCount = 0,
+        lostCount = 0;
 
     // Функция для получения элемента лунки по индексу
     const getHole = index => document.getElementById(`hole${index}`),
@@ -58,12 +57,14 @@
                 }
             }
 
+
             // Если игра окончена, сбрасываем. Сброс игры происходит через 1 секунду
             if (!playing) {
                 setTimeout(resetGame, 1000);
             }
         };
     }
+
 
     next();
 })();
