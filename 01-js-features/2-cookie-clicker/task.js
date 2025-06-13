@@ -5,33 +5,39 @@ const clickerSpeed = document.getElementById('clicker__speed');
 
 // Инициализируем переменные
 let counter = 0;
-let lastClickTime = null;
+const clickTimes = []; // Массив для хранения времени кликов
+const SPEED_CALCULATION_WINDOW = 5; // Количество кликов для усреднения скорости
 
 // Функция для обработки клика
-cookie.onclick = function() {
-    // Увеличиваем счётчик
+cookie.onclick = function () {
+    // Увеличиваем счётчик и обновляем отображение
     counter++;
     clickerCounter.textContent = counter;
 
     // Получаем текущее время
     const currentTime = new Date();
 
-     // Если это не первый клик, рассчитываем скорость клика
-     if (lastClickTime) {
-        const timeDifference = (currentTime - lastClickTime) / 1000;
-        const clickSpeed = (1 / timeDifference).toFixed(2);
-        clickerSpeed.textContent = clickSpeed;
+    // Добавляем текущее время в массив кликов
+    clickTimes.push(currentTime);
+
+    // Удаляем старые клики, если превысили окно усреднения
+    if (clickTimes.length > SPEED_CALCULATION_WINDOW) {
+        clickTimes.shift();
     }
 
-    // Сохраняем время последнего клика
-    lastClickTime = currentTime;
-
-    // Меняем размеры печеньки
-    if (counter % 2 === 0) {
-        cookie.style.width = '180px';
-        cookie.style.height = '100px';
-    } else {
-        cookie.style.width = '200px';
-        cookie.style.height = '120px';
+    // Рассчитываем среднюю скорость, если есть хотя бы 2 клика
+    if (clickTimes.length > 1) {
+        const timeDiff = (clickTimes[clickTimes.length - 1] - clickTimes[0]) / 1000;
+        const clicksInWindow = clickTimes.length - 1;
+        const clicksPerSecond = (clicksInWindow / timeDiff).toFixed(2);
+        clickerSpeed.textContent = clicksPerSecond;
     }
+
+    // Анимация печеньки
+    cookie.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+        cookie.style.transform = 'scale(1.0)';
+    }, 100);
+
+
 };
