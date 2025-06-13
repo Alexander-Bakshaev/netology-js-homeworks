@@ -114,8 +114,58 @@ body {
   100% { transform: scale(1); }
 }
 
-.status {  
-  margin-bottom: 20px;
+/* Стили для счетчиков */
+.score-counters {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    border-radius: 50px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.counter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.counter-icon {
+    font-size: 24px;
+    margin-right: 10px;
+    width: 30px;
+    text-align: center;
+}
+
+.counter-text {
+    font-size: 16px;
+    color: #555;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+.counter-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+    min-width: 24px;
+    text-align: center;
+}
+
+#dead {
+    color: #27ae60;
+}
+
+#lost {
+    color: #e74c3c;
 }
 
 /* Стили для уведомлений */
