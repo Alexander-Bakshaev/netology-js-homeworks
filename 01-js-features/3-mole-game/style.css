@@ -115,7 +115,28 @@ body {
 }
 
 .status {  
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 0; /* Убираем лишние пробелы между inline-блоками */
+}
+
+.status span {
+  display: inline-block;
+  padding: 5px 15px;
+  margin: 0 5px 10px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#dead {
+  background-color: #27ae60;
+}
+
+#lost {
+  background-color: #e74c3c;
 }
 
 /* Стили для уведомлений */
