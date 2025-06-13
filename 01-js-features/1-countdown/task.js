@@ -6,9 +6,10 @@ const timerElement = document.getElementById('timer');
 
 // Функция для обновления таймера
 function updateTimer() {
-    let hours = Math.floor(totalSeconds / 3600);
-    let minutes = Math.floor((totalSeconds % 3600) / 60);
-    let seconds = totalSeconds % 60;
+    const hours = Math.floor(totalSeconds / 3600);
+    const remainingSeconds = totalSeconds % 3600;
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
 
     // Форматируем время в hh:mm:ss
     const formattedTime = 
@@ -24,19 +25,21 @@ function updateTimer() {
         totalSeconds--;
     } else {
         clearInterval(timerInterval);
-        alert("Вы победили в конкурсе!");
+        alert('Вы победили в конкурсе!');
         startDownload();
     }
 }
 
-// Функция для запуска скачивания
+// Функция для запуска скачивания файла
 function startDownload() {
-    const link = document.createElement('a');
-    link.href = 'https://example.com/yourfile.zip';
-    link.download = 'yourfile.zip';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = 'https://example.com/yourfile.zip';
+    downloadLink.download = 'prize.zip';
+    downloadLink.style.display = 'none';
+    
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
 }
 
 // Запускаем интервал для обновления таймера
