@@ -1,4 +1,21 @@
 (() => {
+    // Создаем элемент для уведомлений
+    const notification = document.createElement('div');
+    notification.className = 'game-notification';
+    document.body.appendChild(notification);
+
+    // Функция показа уведомления
+    function showNotification(message, type) {
+        notification.textContent = message;
+        notification.className = `game-notification ${type}`;
+        setTimeout(() => notification.classList.add('show'), 10);
+        
+        // Скрываем уведомление через 2 секунды
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 2000);
+    }
+
     // Переменные для отслеживания состояния игры
     let playing = true,
         activeHole = 1,
@@ -43,7 +60,7 @@
 
                 // Проверка на победу
                 if (deadCount === 10) {
-                    alert("Победа!");
+                    showNotification('Победа!', 'win');
                     playing = false;
                 }
             } else {
@@ -52,7 +69,7 @@
 
                 // Проверка на поражение
                 if (lostCount === 5) {
-                    alert("Вы проиграли!");
+                    showNotification('Вы проиграли!', 'lose');
                     playing = false;
                 }
             }
