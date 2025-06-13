@@ -115,33 +115,20 @@ body {
 }
 
 .status {  
-  margin: 0 auto 25px;
+  margin-bottom: 25px;
   text-align: center;
   font-size: 0; /* Убираем лишние пробелы между inline-блоками */
-  white-space: nowrap; /* Предотвращаем перенос на новую строку */
-  display: inline-block; /* Сжимаем контейнер по содержимому */
-  background: white;
-  padding: 10px 20px;
-  border-radius: 30px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .status span {
   display: inline-block;
-  padding: 5px 20px;
-  margin: 0 5px;
-  border-radius: 15px;
+  padding: 5px 15px;
+  margin: 0 5px 10px;
+  border-radius: 20px;
   font-size: 16px;
   font-weight: 500;
   color: white;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-
-/* Эффект при наведении */
-.status span:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 #dead {
