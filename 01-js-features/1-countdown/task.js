@@ -33,7 +33,7 @@ function updateTimer() {
 // Функция для запуска скачивания файла
 function startDownload() {
     const downloadLink = document.createElement('a');
-    downloadLink.href = 'https://example.com/yourfile.zip';
+    downloadLink.href = 'https://example.com/prize.zip';
     downloadLink.download = 'prize.zip';
     downloadLink.style.display = 'none';
     
