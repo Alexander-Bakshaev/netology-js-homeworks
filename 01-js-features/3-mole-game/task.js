@@ -42,7 +42,7 @@
         next();
     };
 
-    // Функция для активации следующего крота
+    // Функция для показа следующего крота
     const next = () => {
         if (!playing) return;
         deactivateHole(activeHole);
