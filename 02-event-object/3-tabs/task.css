@@ -1,27 +1,50 @@
+/* Базовые стили */
 .tab__navigation {
   display: flex;
   justify-content: space-around;
-  align-items: center;
   padding: 10px 0;
   background-color: #f3f4f7;
 }
 
 .tab {
   cursor: pointer;
+  padding: 10px;
+  text-align: center;
+  flex: 1;
 }
 
 .tab_active {
-  color: blue;
+  color: #0066cc;
+  font-weight: 600;
 }
 
 .tab__content {
   display: none;
   padding: 20px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .tab__content_active {
   display: block;
-  opacity: 1;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 300px) {
+  .tab__navigation {
+    flex-direction: column;
+  }
+  
+  .tab {
+    padding: 12px;
+    border-bottom: 1px solid #e1e4e8;
+  }
+  
+  .tab_active {
+    background-color: #f0f4f8;
+  }
 }
