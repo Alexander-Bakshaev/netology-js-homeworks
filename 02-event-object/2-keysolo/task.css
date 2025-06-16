@@ -1,0 +1,128 @@
+/* Базовые стили символов */
+.symbol {
+  font-size: 50px;
+  line-height: 1.2;
+  transition: color 0.2s ease, transform 0.1s ease;
+  display: inline-block;
+  min-width: 20px;
+  text-align: center;
+  position: relative;
+}
+
+/* Шрифты для разных языков */
+.symbol[data-lang="ru"] {
+  font-family: 'Times New Roman', serif;
+}
+
+.symbol[data-lang="en"] {
+  font-family: 'Courier New', monospace;
+}
+
+.symbol[data-lang="other"] {
+  font-family: Arial, sans-serif;
+}
+
+/* Подсветка текущего символа */
+.symbol_current {
+  position: relative;
+  color: #2196F3;
+  font-weight: bold;
+}
+
+.symbol_current::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #2196F3;
+  animation: blink 1s infinite;
+}
+
+/* Правильный символ */
+.symbol_correct {
+  color: #4CAF50;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Анимация неправильного слова */
+.word_incorrect {
+  animation: shake 0.3s ease-in-out;
+  background-color: rgba(244, 67, 54, 0.1);
+  border-radius: 4px;
+}
+
+/* Стили таймера */
+.timer {
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.timer-warning {
+  color: #F44336;
+  animation: pulse 1s infinite;
+}
+
+/* Анимации */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Анимированное сообщение */
+.message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    pointer-events: none;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.message.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.message.success {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+.message.error {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+}
+
+/* Адаптивные настройки */
+@media (max-width: 600px) {
+  .symbol {
+    font-size: 30px;
+  }
+  
+  .word {
+    word-break: break-word;
+  }
+}
