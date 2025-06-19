@@ -1,0 +1,12 @@
+.rotator__case {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.rotator__case_active {
+  display: inline;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s ease-in-out;
+}
