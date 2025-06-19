@@ -1,6 +1,7 @@
 .reveal {
   opacity: 0;
-  transition: 0.3s opacity ease-in-out;
+  transform: translateY(20px);
+  transition: 0.5s all ease-in-out;
   background: orange;
   padding: 20px;
   min-height: 200px;
@@ -11,4 +12,5 @@
   
 .reveal_active {
   opacity: 1;
+  transform: translateY(0);
 }
