@@ -1,4 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
+    let activeTooltip = null;
+    
+    // Функция для закрытия активной подсказки
+    function closeActiveTooltip() {
+        if (activeTooltip) {
+            activeTooltip.remove();
+            activeTooltip = null;
+            // Удаляем обработчики событий
+            document.removeEventListener('click', handleDocumentClick);
+            window.removeEventListener('scroll', handleScroll);
+        }
+    }
+    
+    // Обработчик клика по документу
+    function handleDocumentClick(e) {
+        if (activeTooltip && !activeTooltip.contains(e.target) && 
+            !e.target.classList.contains("has-tooltip")) {
+            closeActiveTooltip();
+        }
+    }
+    
+    // Обработчик скролла
+    function handleScroll() {
+        closeActiveTooltip();
+    }
+    
     // Находим все элементы, которые должны иметь подсказки
     const tooltips = document.querySelectorAll(".has-tooltip");
 
@@ -7,17 +33,14 @@ document.addEventListener("DOMContentLoaded", () => {
         tooltip.addEventListener("click", (event) => {
             event.preventDefault();
 
-            // Проверяем, есть ли уже активная подсказка
-            const activeTooltip = document.querySelector(".tooltip_active");
+            // Закрываем текущую подсказку, если кликаем по тому же элементу
             if (activeTooltip && activeTooltip.dataset.tooltipFor === tooltip.getAttribute("title")) {
-                activeTooltip.remove();
+                closeActiveTooltip();
                 return;
             }
-
-            // Удаляем все другие активные подсказки, если они есть
-            document.querySelectorAll(".tooltip_active").forEach((otherTooltip) => {
-                otherTooltip.remove();
-            });
+            
+            // Закрываем предыдущую подсказку, если она есть
+            closeActiveTooltip();
 
              // Получаем текст подсказки из атрибута title
             const tooltipText = tooltip.getAttribute("title");
@@ -66,17 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
             tooltipElement.style.left = `${left}px`;
             tooltipElement.style.top = `${top}px`;
 
-            // Добавляем обработчик для закрытия подсказки
-            function closeTooltip(e) {
-                if (!tooltipElement.contains(e.target) && e.target !== tooltip) {
-                    tooltipElement.remove();
-                    document.removeEventListener('click', closeTooltip);
-                }
-            }
+            // Сохраняем ссылку на активную подсказку
+            activeTooltip = tooltipElement;
             
-            // Небольшая задержка, чтобы не сработало сразу
+            // Добавляем обработчики событий
             setTimeout(() => {
-                document.addEventListener('click', closeTooltip);
+                document.addEventListener('click', handleDocumentClick);
+                window.addEventListener('scroll', handleScroll, { passive: true });
             }, 0);
         });
     });
