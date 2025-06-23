@@ -18,7 +18,11 @@ button {
 }
   
   .card {
-    width: 600px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
   }
   
   .header {
@@ -28,15 +32,19 @@ button {
   .tasks__control {
     display: flex;
     justify-content: space-between;
+    align-items: stretch;
+    gap: 10px;
   }
   
   .tasks__input {
     display: block;
-    width: 80%;
-    padding: 10px 20px;
+    width: 100%;
+    padding: 12px 15px;
     font-family: Golos, Arial, sans-serif;
     border: 1px solid #e2e2e2;
+    border-radius: 4px;
     box-sizing: border-box;
+    font-size: 16px; /* Увеличиваем для лучшей читаемости на мобильных */
   }
   
   .tasks__add {
@@ -44,21 +52,29 @@ button {
     color: #fff;
     background-color: #06f;
     border: 1px solid transparent;
-    border-radius: 2px;
+    border-radius: 4px;
     box-sizing: border-box;
     cursor: pointer;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     outline: none;
-    padding: 8px 12px;
-    text-align: center;
-    transition: 0.3s ease;
+    padding: 0 20px;
+    min-width: 100px;
+    height: 44px; /* Фиксированная высота для удобства нажатия */
+    transition: all 0.3s ease;
     text-decoration: none;
     user-select: none;
-    vertical-align: top;
-    white-space: nowrap;
     font-weight: 500;
     box-shadow: none;
+    white-space: nowrap;
+    font-size: 16px;
+    line-height: 1;
+  }
+  
+  .tasks__add:active {
+    transform: scale(0.98);
   }
   
   .task {
@@ -120,4 +136,51 @@ button {
 
 .input-error {
     border-color: #ff4444 !important;
+    animation: none;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .tasks__control {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .tasks__input,
+  .tasks__add {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .task {
+    padding: 12px 15px;
+  }
+  
+  .task__title {
+    padding: 0 10px 0 0;
+    font-size: 15px;
+    word-break: break-word;
+  }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 480px) {
+  .card {
+    padding: 0 10px;
+  }
+  
+  .task {
+    padding: 10px 12px;
+  }
+  
+  .task__remove {
+    font-size: 22px;
+    padding-left: 10px;
+  }
+  
+  .notification {
+    width: calc(100% - 40px);
+    padding: 10px 15px;
+    font-size: 14px;
+  }
 }
