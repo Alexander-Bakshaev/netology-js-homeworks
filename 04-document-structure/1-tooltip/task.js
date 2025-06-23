@@ -24,13 +24,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Создаем новый элемент для отображения подсказки
             const tooltipElement = document.createElement("div");
-            tooltipElement.className = "tooltip tooltip_active";
+            tooltipElement.className = "tooltip";
             tooltipElement.textContent = tooltipText;
             tooltipElement.dataset.tooltipFor = tooltipText;
 
             // Определяем позицию подсказки (по умолчанию позиция будет "bottom")
             const position = tooltip.getAttribute("data-position") || "bottom";
             document.body.appendChild(tooltipElement);
+            
+            // Принудительный рефлоу перед добавлением класса анимации
+            void tooltipElement.offsetWidth;
+            tooltipElement.classList.add('tooltip_active');
 
             // Получаем координаты элемента, к которому привязана подсказка
             const coords = tooltip.getBoundingClientRect();
@@ -63,11 +67,17 @@ document.addEventListener("DOMContentLoaded", () => {
             tooltipElement.style.top = `${top}px`;
 
             // Добавляем обработчик для закрытия подсказки
-            document.addEventListener("click", (e) => {
+            function closeTooltip(e) {
                 if (!tooltipElement.contains(e.target) && e.target !== tooltip) {
                     tooltipElement.remove();
+                    document.removeEventListener('click', closeTooltip);
                 }
-            }, { once: true }); // Обработчик срабатывает только один раз
+            }
+            
+            // Небольшая задержка, чтобы не сработало сразу
+            setTimeout(() => {
+                document.addEventListener('click', closeTooltip);
+            }, 0);
         });
     });
 });
