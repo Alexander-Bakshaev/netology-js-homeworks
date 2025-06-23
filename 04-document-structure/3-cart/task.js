@@ -15,7 +15,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Функция для обновления видимости корзины: показываем её только при наличии товаров
     function updateCartVisibility() {
-        cart.style.display = cartProductsContainer.children.length > 0 ? 'block' : 'none';
+        const hasItems = cartProductsContainer.children.length > 0;
+        if (hasItems) {
+            cart.classList.add('visible');
+            cart.style.display = 'block';
+        } else {
+            cart.classList.remove('visible');
+            // Даём время на анимацию исчезновения перед скрытием
+            setTimeout(() => {
+                if (cartProductsContainer.children.length === 0) {
+                    cart.style.display = 'none';
+                }
+            }, 300);
+        }
     }
 
     // Функция для сохранения текущего состояния корзины в localStorage
@@ -41,9 +53,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Функция для загрузки корзины из localStorage при открытии страницы
     function loadCartFromLocalStorage() {
-        const savedCart = JSON.parse(localStorage.getItem("cart"));
+        const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        
+        // Очищаем текущую корзину перед загрузкой
+        cartProductsContainer.innerHTML = '';
 
-        if (savedCart) {
+        if (savedCart.length > 0) {
             savedCart.forEach(item => {
                 // Воссоздание каждого элемента корзины из сохранённых данных
                 const cartProduct = document.createElement("div");
@@ -206,6 +221,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 saveCartToLocalStorage();
                 updateCartVisibility();
 
+                // Добавляем класс подсветки к товару
+                product.classList.add('highlight');
+                // Удаляем класс подсветки после завершения анимации
+                setTimeout(() => {
+                    product.classList.remove('highlight');
+                }, 1500);
+                
                 // Запуск анимации добавления товара в корзину
                 animateProductToCart(product, cartProduct);
             });
