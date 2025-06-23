@@ -3,6 +3,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const tasksForm = document.getElementById("tasks__form");
     const tasksInput = document.getElementById("task__input");
     const tasksList = document.getElementById("tasks__list");
+    const notification = document.getElementById("notification");
+    
+    // Функция для показа уведомления
+    function showNotification(message, isError = false) {
+        notification.textContent = message;
+        notification.style.display = 'block';
+        notification.style.backgroundColor = isError ? '#ff4444' : '#4CAF50';
+        notification.style.animation = 'fadeIn 0.3s ease forwards';
+        
+        // Скрываем уведомление через 3 секунды
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.3s ease forwards';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 300);
+        }, 3000);
+    }
 
     // Функция для создания задачи на основе переданного текста
     function createTaskElement(taskText) {
@@ -24,8 +41,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // Добавляем обработчик события для удаления задачи при клике на "×"
         taskRemove.addEventListener("click", (e) => {
             e.preventDefault();
-            task.remove();
-            saveTasks();
+            // Добавляем анимацию удаления
+            task.classList.add('removing');
+            
+            // Удаляем элемент после завершения анимации
+            setTimeout(() => {
+                task.remove();
+                saveTasks();
+                showNotification('Задача удалена');
+            }, 300);
         });
 
         // Добавляем текст задачи и кнопку удаления в контейнер задачи
@@ -58,11 +82,22 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const taskText = tasksInput.value.trim();
 
-        if (taskText) {
-            createTaskElement(taskText);
-            saveTasks();
-            tasksInput.value = "";
+        // Проверка на пустую строку
+        if (!taskText) {
+            tasksInput.classList.add('input-error');
+            showNotification('Пожалуйста, введите текст задачи', true);
+            
+            // Удаляем класс ошибки через 0.5 секунды
+            setTimeout(() => {
+                tasksInput.classList.remove('input-error');
+            }, 500);
+            return;
         }
+
+        createTaskElement(taskText);
+        saveTasks();
+        tasksInput.value = "";
+        showNotification('Задача успешно добавлена!');
     });
 
     // Загружаем задачи из localStorage при загрузке страницы
