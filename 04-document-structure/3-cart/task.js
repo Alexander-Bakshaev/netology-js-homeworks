@@ -1,6 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
     const cartProductsContainer = document.querySelector(".cart__products");
     const cart = document.querySelector(".cart");
+    
+    // Переменная для хранения таймера устранения дребезга
+    let debounceTimer;
+    
+    // Функция для устранения дребезга
+    function debounce(func, delay) {
+        return function(...args) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
 
     // Функция для обновления видимости корзины: показываем её только при наличии товаров
     function updateCartVisibility() {
@@ -15,6 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
             count: parseInt(cartProduct.querySelector(".cart__product-count").textContent)
         }));
         localStorage.setItem("cart", JSON.stringify(cartItems));
+    }
+
+    // Функция для удаления товара из корзины с анимацией
+    function removeCartItem(cartProduct) {
+        cartProduct.classList.add('removing');
+        // Удаляем элемент из DOM после завершения анимации
+        cartProduct.addEventListener('animationend', () => {
+            cartProduct.remove();
+            saveCartToLocalStorage();
+            updateCartVisibility();
+        }, { once: true });
     }
 
     // Функция для загрузки корзины из localStorage при открытии страницы
@@ -42,9 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Добавляем событие для удаления товара из корзины при нажатии на "Удалить"
                 removeButton.addEventListener("click", () => {
-                    cartProduct.remove();
-                    saveCartToLocalStorage();
-                    updateCartVisibility();
+                    removeCartItem(cartProduct);
                 });
 
                 cartProduct.appendChild(cartProductImage);
@@ -57,34 +77,58 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCartVisibility();
     }
 
-    // Функция анимации перемещения товара в корзину
+    // Функция анимации перемещения товара в корзину с оптимизацией
     function animateProductToCart(product, cartProduct) {
         const productImage = product.querySelector(".product__image");
-        const cartImagePosition = cartProduct.querySelector(".cart__product-image").getBoundingClientRect();
-        const productImagePosition = productImage.getBoundingClientRect();
-        const flyingImage = productImage.cloneNode();
+        const cartImage = cartProduct.querySelector(".cart__product-image");
+        
+        // Используем requestAnimationFrame для плавной анимации
+        requestAnimationFrame(() => {
+            const cartImagePosition = cartImage.getBoundingClientRect();
+            const productImagePosition = productImage.getBoundingClientRect();
+            
+            // Создаем клонированное изображение для анимации
+            const flyingImage = productImage.cloneNode();
+            
+            // Устанавливаем стили для анимации с учетом производительности
+            Object.assign(flyingImage.style, {
+                position: 'fixed',
+                width: `${productImage.offsetWidth}px`,
+                height: `${productImage.offsetHeight}px`,
+                top: `${productImagePosition.top}px`,
+                left: `${productImagePosition.left}px`,
+                margin: 0,
+                padding: 0,
+                zIndex: 1000,
+                pointerEvents: 'none',
+                willChange: 'transform, opacity',
+                transform: 'translateZ(0)', // Аппаратное ускорение
+                transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease',
+                opacity: '0.8'
+            });
 
-        flyingImage.style.position = 'absolute';
-        flyingImage.style.width = productImage.offsetWidth + 'px';
-        flyingImage.style.height = productImage.offsetHeight + 'px';
-        flyingImage.style.top = productImagePosition.top + 'px';
-        flyingImage.style.left = productImagePosition.left + 'px';
-        flyingImage.style.transition = 'all 0.5s ease';
-
-        document.body.appendChild(flyingImage);
-
-        // Запускаем перемещение клонированного изображения от товара к корзине
-        setTimeout(() => {
-            flyingImage.style.top = cartImagePosition.top + 'px';
-            flyingImage.style.left = cartImagePosition.left + 'px';
-            flyingImage.style.width = cartImagePosition.width + 'px';
-            flyingImage.style.height = cartImagePosition.height + 'px';
-            flyingImage.style.opacity = '0';
-        }, 10);
-
-        // Удаляем анимированное изображение после завершения анимации
-        flyingImage.addEventListener('transitionend', () => {
-            flyingImage.remove();
+            document.body.appendChild(flyingImage);
+            
+            // Даем браузеру время на отрисовку
+            requestAnimationFrame(() => {
+                // Вычисляем разницу в координатах
+                const deltaX = cartImagePosition.left - productImagePosition.left;
+                const deltaY = cartImagePosition.top - productImagePosition.top;
+                const scaleX = cartImagePosition.width / productImagePosition.width;
+                const scaleY = cartImagePosition.height / productImagePosition.height;
+                
+                // Применяем анимацию через transform для лучшей производительности
+                flyingImage.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+                flyingImage.style.opacity = '0';
+                
+                // Удаляем элемент после завершения анимации
+                const onAnimationEnd = () => {
+                    flyingImage.remove();
+                    flyingImage.removeEventListener('transitionend', onAnimationEnd);
+                };
+                
+                flyingImage.addEventListener('transitionend', onAnimationEnd, { once: true });
+            });
         });
     }
 
@@ -93,64 +137,81 @@ document.addEventListener("DOMContentLoaded", () => {
         const quantityValue = product.querySelector(".product__quantity-value");
         const quantityControls = product.querySelector(".product__quantity-controls");
 
-        // Изменение количества товара по клику на имеющиеся кнопки
-        quantityControls.addEventListener("click", (e) => {
-            if (e.target.classList.contains("product__quantity-control_dec")) {
-                quantityValue.textContent = Math.max(1, parseInt(quantityValue.textContent) - 1);
-            } else if (e.target.classList.contains("product__quantity-control_inc")) {
-                quantityValue.textContent = parseInt(quantityValue.textContent) + 1;
-            }
+        // Обработчики для кнопок изменения количества
+        const decBtn = quantityControls.querySelector('.product__quantity-control_dec');
+        const incBtn = quantityControls.querySelector('.product__quantity-control_inc');
+        
+        // Обработчик уменьшения количества
+        decBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            quantityValue.textContent = Math.max(1, parseInt(quantityValue.textContent) - 1);
+        });
+        
+        // Обработчик увеличения количества
+        incBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            quantityValue.textContent = parseInt(quantityValue.textContent) + 1;
         });
 
         // Обработчик добавления товара в корзину
-        product.querySelector(".product__add").addEventListener("click", () => {
-            const productId = product.dataset.id;
-            const productImageSrc = product.querySelector(".product__image").src;
-            const productQuantity = parseInt(quantityValue.textContent);
+        const addToCartHandler = (e) => {
+            // Добавляем визуальный отклик при нажатии
+            const button = e.currentTarget;
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                button.style.transform = '';
+            }, 100);
+            
+            // Запускаем анимацию добавления в корзину
+            requestAnimationFrame(() => {
+                const productId = product.dataset.id;
+                const productImageSrc = product.querySelector(".product__image").src;
+                const productQuantity = parseInt(quantityValue.textContent);
 
-            // Проверка, есть ли уже такой товар в корзине
-            let cartProduct = cartProductsContainer.querySelector(`.cart__product[data-id="${productId}"]`);
+                // Проверка, есть ли уже такой товар в корзине
+                let cartProduct = cartProductsContainer.querySelector(`.cart__product[data-id="${productId}"]`);
 
-            // Если товар уже есть, увеличиваем его количество. Если товара нет в корзине, создаем новый элемент
-            if (cartProduct) {
-                const cartProductCount = cartProduct.querySelector(".cart__product-count");
-                cartProductCount.textContent = parseInt(cartProductCount.textContent) + productQuantity;
-            } else {
-                cartProduct = document.createElement("div");
-                cartProduct.className = "cart__product";
-                cartProduct.dataset.id = productId;
+                // Если товар уже есть, увеличиваем его количество. Если товара нет в корзине, создаем новый элемент
+                if (cartProduct) {
+                    const cartProductCount = cartProduct.querySelector(".cart__product-count");
+                    cartProductCount.textContent = parseInt(cartProductCount.textContent) + productQuantity;
+                } else {
+                    cartProduct = document.createElement("div");
+                    cartProduct.className = "cart__product";
+                    cartProduct.dataset.id = productId;
 
-                const cartProductImage = document.createElement("img");
-                cartProductImage.className = "cart__product-image";
-                cartProductImage.src = productImageSrc;
+                    const cartProductImage = document.createElement("img");
+                    cartProductImage.className = "cart__product-image";
+                    cartProductImage.src = productImageSrc;
 
-                const cartProductCount = document.createElement("div");
-                cartProductCount.className = "cart__product-count";
-                cartProductCount.textContent = productQuantity;
+                    const cartProductCount = document.createElement("div");
+                    cartProductCount.className = "cart__product-count";
+                    cartProductCount.textContent = productQuantity;
 
-                const removeButton = document.createElement("div");
-                removeButton.className = "cart__product-remove";
-                removeButton.textContent = "Удалить";
-                
-                removeButton.addEventListener("click", () => {
-                    cartProduct.remove();
-                    saveCartToLocalStorage();
-                    updateCartVisibility();
-                });
+                    const removeButton = document.createElement("div");
+                    removeButton.className = "cart__product-remove";
+                    removeButton.textContent = "Удалить";
+                    
+                    removeButton.addEventListener("click", () => {
+                        removeCartItem(cartProduct);
+                    });
 
-                cartProduct.appendChild(cartProductImage);
-                cartProduct.appendChild(cartProductCount);
-                cartProduct.appendChild(removeButton);
-                cartProductsContainer.appendChild(cartProduct);
-            }
+                    cartProduct.appendChild(cartProductImage);
+                    cartProduct.appendChild(cartProductCount);
+                    cartProduct.appendChild(removeButton);
+                    cartProductsContainer.appendChild(cartProduct);
+                }
 
-            // Сохранение корзины после добавления товара. Обновление видимости корзины
-            saveCartToLocalStorage();
-            updateCartVisibility();
+                // Сохранение корзины после добавления товара. Обновление видимости корзины
+                saveCartToLocalStorage();
+                updateCartVisibility();
 
-            // Запуск анимации добавления товара в корзину
-            animateProductToCart(product, cartProduct);
-        });
+                // Запуск анимации добавления товара в корзину
+                animateProductToCart(product, cartProduct);
+            });
+        };
+        
+        product.querySelector(".product__add").addEventListener("click", addToCartHandler);
     });
 
     // Загружаем сохранённые товары в корзину при загрузке страницы

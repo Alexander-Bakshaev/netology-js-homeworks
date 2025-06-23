@@ -53,20 +53,53 @@ body {
   }
   
   .product__quantity-control {
-    padding: 5px 10px;
+    padding: 5px 12px;
     box-sizing: border-box;
     cursor: pointer;
-    border: 1px solid gray;
+    border: 1px solid #ccc;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
+    transition: all 0.15s ease-out;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
   }
   
   .product__quantity-control:hover {
-    background: gray;
-    color: #fff;
+    background: #f0f0f0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .product__quantity-control:active {
+    background: #e0e0e0;
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  
+  /* Эффект волны при нажатии */
+  .product__quantity-control::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.1);
+    border-radius: 50%;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    pointer-events: none;
+  }
+  
+  .product__quantity-control:active::after {
+    transform: scale(2);
+    opacity: 1;
+    transition: transform 0s, opacity 0s;
   }
   
   .product__quantity-value {
@@ -75,15 +108,52 @@ body {
   }
   
   .product__add {
-    background: green;
+    background: #4CAF50;
     padding: 10px 20px;
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
+    border: none;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease-out;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
   
   .product__add:hover {
-    opacity: 0.8;
+    background: #43A047;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  .product__add:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  /* Эффект волны при нажатии */
+  .product__add::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    pointer-events: none;
+  }
+  
+  .product__add:active::after {
+    transform: scale(2);
+    opacity: 1;
+    transition: transform 0s, opacity 0s;
   }
   
   .product-shadow {
@@ -91,8 +161,50 @@ body {
   }
 
   .cart__product-remove {
-    color: red;
+    color: #f44336;
     cursor: pointer;
     font-weight: bold;
     margin-left: 10px;
-}
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.2);
+  }
+  
+  .cart__product-remove:hover {
+    background: rgba(244, 67, 54, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  .cart__product-remove:active {
+    background: rgba(244, 67, 54, 0.2);
+    transform: translateY(0);
+  }
+  
+  /* Анимация удаления товара */
+  .cart__product.removing {
+    animation: slideOutRight 0.3s forwards;
+    overflow: hidden;
+  }
+  
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+      max-height: 200px;
+      margin-bottom: 10px;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+      max-height: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border: none;
+    }
+  }
