@@ -23,23 +23,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Функция для создания задачи на основе переданного текста
     function createTaskElement(taskText) {
-        // Создаем контейнер для задачи
-        const task = document.createElement("div");
-        task.className = "task";
-
-        // Создаем элемент для отображения текста задачи
-        const taskTitle = document.createElement("div");
-        taskTitle.className = "task__title";
-        taskTitle.textContent = taskText;
-
-        // Создаем ссылку для удаления задачи
-        const taskRemove = document.createElement("a");
-        taskRemove.href = "#";
-        taskRemove.className = "task__remove";
-        taskRemove.innerHTML = "&times;";
+        // Создаем HTML-разметку с помощью шаблонных строк
+        const taskHTML = `
+            <div class="task">
+                <div class="task__title">
+                    ${taskText}
+                </div>
+                <a href="#" class="task__remove">&times;</a>
+            </div>
+        `;
         
-        // Добавляем обработчик события для удаления задачи при клике на "×"
-        taskRemove.addEventListener("click", (e) => {
+        // Создаем элемент из HTML-строки
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = taskHTML.trim();
+        const task = tempDiv.firstChild;
+        
+        // Находим кнопку удаления и добавляем обработчик
+        const removeButton = task.querySelector('.task__remove');
+        removeButton.addEventListener('click', (e) => {
             e.preventDefault();
             // Добавляем анимацию удаления
             task.classList.add('removing');
@@ -51,10 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 showNotification('Задача удалена');
             }, 300);
         });
-
-        // Добавляем текст задачи и кнопку удаления в контейнер задачи
-        task.appendChild(taskTitle);
-        task.appendChild(taskRemove);
 
         // Добавляем задачу в список задач на странице
         tasksList.appendChild(task);

@@ -11,11 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
             fontSizeLinks.forEach(link => link.classList.remove('font-size_active'));
             link.classList.add('font-size_active');
             bookElement.classList.remove('book_fs-small', 'book_fs-big');
-
-            if (link.dataset.size === 'small') {
-                bookElement.classList.add('book_fs-small');
-            } else if (link.dataset.size === 'big') {
-                bookElement.classList.add('book_fs-big');
+            const size = link.dataset.size;
+            if (size) {
+                bookElement.classList.add(`book_fs-${size}`);
             }
         });
     });

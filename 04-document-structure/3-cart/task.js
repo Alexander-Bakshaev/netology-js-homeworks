@@ -60,31 +60,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (savedCart.length > 0) {
             savedCart.forEach(item => {
-                // Воссоздание каждого элемента корзины из сохранённых данных
-                const cartProduct = document.createElement("div");
-                cartProduct.className = "cart__product";
-                cartProduct.dataset.id = item.id;
-
-                const cartProductImage = document.createElement("img");
-                cartProductImage.className = "cart__product-image";
-                cartProductImage.src = item.imageSrc;
-
-                const cartProductCount = document.createElement("div");
-                cartProductCount.className = "cart__product-count";
-                cartProductCount.textContent = item.count;
-
-                const removeButton = document.createElement("div");
-                removeButton.className = "cart__product-remove";
-                removeButton.textContent = "Удалить";
-
-                // Добавляем событие для удаления товара из корзины при нажатии на "Удалить"
-                removeButton.addEventListener("click", () => {
+                // Создаем HTML-разметку для товара в корзине с помощью шаблонных строк
+                const cartProductHTML = `
+                    <div class="cart__product" data-id="${item.id}">
+                        <img class="cart__product-image" src="${item.imageSrc}" alt="Товар">
+                        <div class="cart__product-count">${item.count}</div>
+                        <div class="cart__product-remove">Удалить</div>
+                    </div>
+                `;
+                
+                // Создаем элемент из HTML-строки
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = cartProductHTML.trim();
+                const cartProduct = tempDiv.firstChild;
+                
+                // Находим кнопку удаления и добавляем обработчик
+                const removeButton = cartProduct.querySelector('.cart__product-remove');
+                removeButton.addEventListener('click', () => {
                     removeCartItem(cartProduct);
                 });
-
-                cartProduct.appendChild(cartProductImage);
-                cartProduct.appendChild(cartProductCount);
-                cartProduct.appendChild(removeButton);
+                
+                // Добавляем товар в корзину
                 cartProductsContainer.appendChild(cartProduct);
             });
         }
@@ -191,29 +187,27 @@ document.addEventListener("DOMContentLoaded", () => {
                     const cartProductCount = cartProduct.querySelector(".cart__product-count");
                     cartProductCount.textContent = parseInt(cartProductCount.textContent) + productQuantity;
                 } else {
-                    cartProduct = document.createElement("div");
-                    cartProduct.className = "cart__product";
-                    cartProduct.dataset.id = productId;
-
-                    const cartProductImage = document.createElement("img");
-                    cartProductImage.className = "cart__product-image";
-                    cartProductImage.src = productImageSrc;
-
-                    const cartProductCount = document.createElement("div");
-                    cartProductCount.className = "cart__product-count";
-                    cartProductCount.textContent = productQuantity;
-
-                    const removeButton = document.createElement("div");
-                    removeButton.className = "cart__product-remove";
-                    removeButton.textContent = "Удалить";
+                    // Создаем HTML-разметку для нового товара в корзине с помощью шаблонных строк
+                    const cartProductHTML = `
+                        <div class="cart__product" data-id="${productId}">
+                            <img class="cart__product-image" src="${productImageSrc}" alt="Товар">
+                            <div class="cart__product-count">${productQuantity}</div>
+                            <div class="cart__product-remove">Удалить</div>
+                        </div>
+                    `;
                     
-                    removeButton.addEventListener("click", () => {
+                    // Создаем элемент из HTML-строки
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = cartProductHTML.trim();
+                    cartProduct = tempDiv.firstChild;
+                    
+                    // Находим кнопку удаления и добавляем обработчик
+                    const removeButton = cartProduct.querySelector('.cart__product-remove');
+                    removeButton.addEventListener('click', () => {
                         removeCartItem(cartProduct);
                     });
-
-                    cartProduct.appendChild(cartProductImage);
-                    cartProduct.appendChild(cartProductCount);
-                    cartProduct.appendChild(removeButton);
+                    
+                    // Добавляем товар в корзину
                     cartProductsContainer.appendChild(cartProduct);
                 }
 
