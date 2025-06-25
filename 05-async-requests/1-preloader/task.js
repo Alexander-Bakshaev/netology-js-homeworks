@@ -1,98 +1,75 @@
-// Константы
 const API_URL = 'https://students.netoservices.ru/nestjs-backend/slow-get-courses';
-const CACHE_KEYS = {
-  CURRENCIES: 'cachedCurrencies',
-  LAST_UPDATED: 'lastUpdated'
-};
+const CACHE_KEYS = { CURRENCIES: 'cachedCurrencies', LAST_UPDATED: 'lastUpdated' };
+
+const formatDate = (dateString) => dateString ? `Обновлено: ${new Date(dateString).toLocaleString('ru-RU')}` : '';
+
+const getCurrencyRow = ({ CharCode, Value, Name }) => `
+  <tr>
+    <td>${CharCode}</td>
+    <td>${Value.toFixed(2)}</td>
+    <td>${Name}</td>
+  </tr>`;
 
 document.addEventListener('DOMContentLoaded', () => {
   const loader = document.getElementById('loader');
   const itemsContainer = document.getElementById('items');
-  const refreshButton = document.createElement('button');
-  refreshButton.textContent = 'Обновить курсы';
-  refreshButton.className = 'refresh-button';
-  document.querySelector('.card').prepend(refreshButton);
+  const refreshBtn = document.getElementById('refresh-btn');
+  const lastUpdatedElement = document.getElementById('last-updated');
 
-  // Функция создания элемента валюты
-  function createCurrencyElement(currency) {
-    const item = document.createElement('div');
-    item.className = 'item';
+  const displayCurrencyData = (currencies, timestamp = null) => {
+    itemsContainer.innerHTML = `
+      <table id="currency-table">
+        <thead><tr><th>Код</th><th>Курс</th><th>Валюта</th></tr></thead>
+        <tbody>${Object.values(currencies).map(getCurrencyRow).join('')}</tbody>
+      </table>`;
+    if (timestamp) lastUpdatedElement.textContent = formatDate(timestamp);
+  };
 
-    ['code', 'value', 'currency'].forEach(type => {
-      const div = document.createElement('div');
-      div.className = `item__${type}`;
-
-      switch(type) {
-        case 'code':
-          div.textContent = currency.CharCode;
-          break;
-        case 'value':
-          div.textContent = currency.Value.toFixed(2);
-          break;
-        case 'currency':
-          div.textContent = 'руб.';
-          break;
-      }
-
-      item.appendChild(div);
-    });
-
-    return item;
-  }
-
-  // Функция отображения данных
-  function displayCurrencyData(currencies) {
-    itemsContainer.innerHTML = '';
-    Object.values(currencies).forEach(currency => {
-      itemsContainer.appendChild(createCurrencyElement(currency));
-    });
-  }
-
-  // Функция загрузки данных
-  async function loadCurrencyData() {
+  const loadCurrencyData = async () => {
     try {
       loader.classList.add('loader_active');
-
+      refreshBtn.classList.add('loading');
+      refreshBtn.disabled = true;
+      
       const response = await fetch(API_URL);
-      if (!response.ok) throw new Error('Ошибка загрузки данных');
-
-      const data = await response.json();
-      const currencies = data.response.Valute;
-
-      // Кешируем данные
+      if (!response.ok) throw new Error('Ошибка загрузки');
+      
+      const { response: { Valute: currencies } } = await response.json();
+      const timestamp = new Date().toISOString();
+      
       localStorage.setItem(CACHE_KEYS.CURRENCIES, JSON.stringify(currencies));
-      localStorage.setItem(CACHE_KEYS.LAST_UPDATED, new Date().toLocaleString());
-
-      displayCurrencyData(currencies);
+      localStorage.setItem(CACHE_KEYS.LAST_UPDATED, timestamp);
+      
+      displayCurrencyData(currencies, timestamp);
     } catch (error) {
       console.error('Ошибка:', error);
-      itemsContainer.textContent = 'Не удалось загрузить курсы валют. Пожалуйста, попробуйте позже.';
+      itemsContainer.innerHTML = '<div class="error-message">Не удалось загрузить курсы валют</div>';
     } finally {
       loader.classList.remove('loader_active');
+      refreshBtn.classList.remove('loading');
+      refreshBtn.disabled = false;
     }
-  }
+  };
 
-  // Загрузка данных из кеша
-  function loadFromCache() {
+  const loadFromCache = () => {
     const cachedData = localStorage.getItem(CACHE_KEYS.CURRENCIES);
-    if (cachedData) {
-      try {
-        displayCurrencyData(JSON.parse(cachedData));
-      } catch (e) {
-        console.error('Ошибка при чтении кеша:', e);
-      }
+    if (!cachedData) return false;
+    
+    try {
+      displayCurrencyData(JSON.parse(cachedData), localStorage.getItem(CACHE_KEYS.LAST_UPDATED));
+      return true;
+    } catch (e) {
+      console.error('Ошибка кеша:', e);
+      return false;
     }
-  }
+  };
 
-  // Обработчики событий
-  refreshButton.addEventListener('click', loadCurrencyData);
+  refreshBtn.addEventListener('click', loadCurrencyData);
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-      loadCurrencyData();
-    }
+    if (document.visibilityState === 'visible') loadCurrencyData();
   });
 
-  // Инициализация
-  loadFromCache();
-  loadCurrencyData(); // Загружаем свежие данные
+  if (!loadFromCache() || Date.now() - new Date(localStorage.getItem(CACHE_KEYS.LAST_UPDATED)).getTime() > 300000) {
+    loadCurrencyData();
+  }
 });
