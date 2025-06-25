@@ -93,8 +93,13 @@
 .loader {
   display: none;
   justify-content: center;
+  align-items: center;
   padding: 20px 0;
   width: 100%;
+  min-height: 60px;
+  margin: 10px 0;
+  background: #f9f9f9;
+  border-radius: 4px;
 }
 
 .loader_active {
@@ -104,4 +109,5 @@
 .loader img {
   width: 40px;
   height: 40px;
+  margin: 0 auto;
 }
