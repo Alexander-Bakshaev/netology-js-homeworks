@@ -1,23 +1,23 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
 .card {
   max-width: 600px;
   margin: 0 auto;
-  font-family: Arial, sans-serif;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .card h1 {
-  margin: 0 0 20px 0;
+  margin: 0 0 20px;
+  text-align: center;
   color: #333;
-  font-size: 24px;
-}
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
 }
 
 .controls {
@@ -27,11 +27,6 @@
   margin-bottom: 15px;
 }
 
-.last-updated {
-  font-size: 14px;
-  color: #666;
-}
-
 .refresh-btn {
   background: #4CAF50;
   color: white;
@@ -39,23 +34,15 @@
   padding: 8px 15px;
   border-radius: 4px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  transition: background-color 0.2s;
-}
-
-.refresh-btn:hover {
-  background: #45a049;
 }
 
 .refresh-btn:disabled {
-  background: #cccccc;
+  background: #ccc;
   cursor: not-allowed;
 }
 
 .refresh-icon {
+  display: inline-block;
   transition: transform 0.3s;
 }
 
@@ -64,14 +51,22 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loader {
+  display: none;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.loader_active {
+  display: flex;
 }
 
 #items {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
 }
 
 #items th, #items td {
@@ -81,13 +76,8 @@
 }
 
 #items th {
-  background-color: #f5f5f5;
+  background: #f5f5f5;
   font-weight: bold;
-  color: #333;
-}
-
-#items tr:last-child td {
-  border-bottom: none;
 }
 
 .loader {
