@@ -1,73 +1,98 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const loader = document.getElementById("loader");
-  const itemsContainer = document.getElementById("items");
+// Константы
+const API_URL = 'https://students.netoservices.ru/nestjs-backend/slow-get-courses';
+const CACHE_KEYS = {
+  CURRENCIES: 'cachedCurrencies',
+  LAST_UPDATED: 'lastUpdated'
+};
 
-  // Функция для отображения данных о валютах на странице
+document.addEventListener('DOMContentLoaded', () => {
+  const loader = document.getElementById('loader');
+  const itemsContainer = document.getElementById('items');
+  const refreshButton = document.createElement('button');
+  refreshButton.textContent = 'Обновить курсы';
+  refreshButton.className = 'refresh-button';
+  document.querySelector('.card').prepend(refreshButton);
+
+  // Функция создания элемента валюты
+  function createCurrencyElement(currency) {
+    const item = document.createElement('div');
+    item.className = 'item';
+
+    ['code', 'value', 'currency'].forEach(type => {
+      const div = document.createElement('div');
+      div.className = `item__${type}`;
+
+      switch(type) {
+        case 'code':
+          div.textContent = currency.CharCode;
+          break;
+        case 'value':
+          div.textContent = currency.Value.toFixed(2);
+          break;
+        case 'currency':
+          div.textContent = 'руб.';
+          break;
+      }
+
+      item.appendChild(div);
+    });
+
+    return item;
+  }
+
+  // Функция отображения данных
   function displayCurrencyData(currencies) {
-    // Очистка контейнера перед добавлением данных
     itemsContainer.innerHTML = '';
-    
-    currencies.forEach((currency) => {
-      // Создаем отдельный элемент для конкретной валюты
-      const item = document.createElement("div");
-      item.className = "item";
-
-      // Создаем блок с кодом валюты
-      const codeElement = document.createElement("div");
-      codeElement.className = "item__code";
-      codeElement.textContent = currency.CharCode;
-
-      // Создаем блок со значением курса
-      const valueElement = document.createElement("div");
-      valueElement.className = "item__value";
-      valueElement.textContent = currency.Value;
-
-      // Создаем блок с текстом "руб."
-      const currencyElement = document.createElement("div");
-      currencyElement.className = "item__currency";
-      currencyElement.textContent = "руб.";
-
-      // Добавляем созданные элементы в item
-      item.appendChild(codeElement);
-      item.appendChild(valueElement);
-      item.appendChild(currencyElement);
-
-      // Добавляем элемент с конкретной валютой в основной контейнер
-      itemsContainer.appendChild(item);
+    Object.values(currencies).forEach(currency => {
+      itemsContainer.appendChild(createCurrencyElement(currency));
     });
   }
 
-  // Функция для загрузки данных о курсах валют из API
-  function loadCurrencyData() {
-    fetch("https://students.netoservices.ru/nestjs-backend/slow-get-courses")
-      // Выводим данные о курсах валют из API
-      .then((response) => response.json())
-      .then((data) => {
-        const currencies = Object.values(data.response.Valute);
+  // Функция загрузки данных
+  async function loadCurrencyData() {
+    try {
+      loader.classList.add('loader_active');
 
-        // Сохраняем полученные данные в localStorage для кеширования
-        localStorage.setItem("cachedCurrencies", JSON.stringify(currencies));
-        localStorage.setItem("lastUpdated", Date.now().toString());
+      const response = await fetch(API_URL);
+      if (!response.ok) throw new Error('Ошибка загрузки данных');
 
-        // Скрываем анимацию загрузки и отображаем данные на странице
-        loader.classList.remove("loader_active");
-        displayCurrencyData(currencies);
-      })
+      const data = await response.json();
+      const currencies = data.response.Valute;
 
-      // Выводим ошибку в консоль при возникновении ошибки загрузки данных
-      .catch((error) => {
-        console.error("Ошибка загрузки данных:", error);
-        loader.classList.remove("loader_active");
-      });
+      // Кешируем данные
+      localStorage.setItem(CACHE_KEYS.CURRENCIES, JSON.stringify(currencies));
+      localStorage.setItem(CACHE_KEYS.LAST_UPDATED, new Date().toLocaleString());
+
+      displayCurrencyData(currencies);
+    } catch (error) {
+      console.error('Ошибка:', error);
+      itemsContainer.textContent = 'Не удалось загрузить курсы валют. Пожалуйста, попробуйте позже.';
+    } finally {
+      loader.classList.remove('loader_active');
+    }
   }
 
-  // Проверка и отображение данных из кэша, если они есть
-  const cachedCurrencies = localStorage.getItem("cachedCurrencies");
-  if (cachedCurrencies) {
-    // Если данные есть в кэше, отображаем их сразу
-    displayCurrencyData(JSON.parse(cachedCurrencies));
+  // Загрузка данных из кеша
+  function loadFromCache() {
+    const cachedData = localStorage.getItem(CACHE_KEYS.CURRENCIES);
+    if (cachedData) {
+      try {
+        displayCurrencyData(JSON.parse(cachedData));
+      } catch (e) {
+        console.error('Ошибка при чтении кеша:', e);
+      }
+    }
   }
 
-  loader.classList.add("loader_active");
-  loadCurrencyData();
+  // Обработчики событий
+  refreshButton.addEventListener('click', loadCurrencyData);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      loadCurrencyData();
+    }
+  });
+
+  // Инициализация
+  loadFromCache();
+  loadCurrencyData(); // Загружаем свежие данные
 });
