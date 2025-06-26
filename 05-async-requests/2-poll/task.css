@@ -1,0 +1,15 @@
+body {
+  font-family: Arial;
+}
+
+.card {
+  width: 625px;
+}
+
+.poll__title {
+  margin-bottom: 20px;
+}
+
+.poll__answer:not(:first-child) { 
+  margin-left: 10px; 
+}
