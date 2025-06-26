@@ -49,9 +49,18 @@ progress {
 
 /* Анимация пульсации для кнопки */
 @keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
-    70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
-    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+    }
+    70% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 10px rgba(244, 67, 54, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(244, 67, 54, 0);
+    }
 }
 
 /* Стили для прогресс-бара */
@@ -171,8 +180,12 @@ input[type="file"] {
 }
 
 @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
 

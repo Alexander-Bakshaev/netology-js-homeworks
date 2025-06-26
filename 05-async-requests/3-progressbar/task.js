@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    
+
     // Предотвращаем стандартную отправку формы
     form.addEventListener('submit', function (event) {
         event.preventDefault();

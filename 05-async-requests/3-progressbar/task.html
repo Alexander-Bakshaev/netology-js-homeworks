@@ -8,42 +8,43 @@
     <link rel="stylesheet" href="task.css">
 </head>
 <body>
-    <header class="header">
-        <div class="logo__container">
-            <a href="https://netology.ru/" class="logo__link"></a>
-        </div>
-        <h1 class="header__title">
-            Домашнее задание к занятию 3.1 «Асинхронные запросы». Загрузка больших файлов.
-        </h1>
-    </header>
+<header class="header">
+    <div class="logo__container">
+        <a href="https://netology.ru/" class="logo__link"></a>
+    </div>
+    <h1 class="header__title">
+        Домашнее задание к занятию 3.1 «Асинхронные запросы». Загрузка больших файлов.
+    </h1>
+</header>
 
-    <main class="content">
-        <div class="card">
-            <form action="https://students.netoservices.ru/nestjs-backend/upload" id="form">
-                <div class="file-upload">
-                    <input type="file" name="file" id="file" required>
-                    <label for="file" class="file-label">
-                        <div class="file-icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17 8 12 3 7 8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
-                            </svg>
-                        </div>
-                        <span class="file-button">Выберите файл</span>
-                        <span class="file-name">или перетащите его сюда</span>
-                    </label>
-                </div>
+<main class="content">
+    <div class="card">
+        <form action="https://students.netoservices.ru/nestjs-backend/upload" id="form">
+            <div class="file-upload">
+                <input type="file" name="file" id="file" required>
+                <label for="file" class="file-label">
+                    <div class="file-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <span class="file-button">Выберите файл</span>
+                    <span class="file-name">или перетащите его сюда</span>
+                </label>
+            </div>
 
-                <div id="status" class="status">Выберите файл для загрузки</div>
+            <div id="status" class="status">Выберите файл для загрузки</div>
 
-                <progress value="0" max="100" id="progress"></progress>
-                <button type="button" id="send" class="submit-button" disabled>Отправить</button>
-            </form>
-        </div>
-    </main>
+            <progress value="0" max="100" id="progress"></progress>
+            <button type="button" id="send" class="submit-button" disabled>Отправить</button>
+        </form>
+    </div>
+</main>
 
-    <script src="main.js" defer></script>
-    <script src="task.js" defer></script>
+<script src="main.js" defer></script>
+<script src="task.js" defer></script>
 </body>
 </html>
