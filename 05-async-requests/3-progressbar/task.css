@@ -1,52 +1,246 @@
-progress {
-    margin-bottom: 10px;
-}
-
-form {
-  position: relative;
-}
-
-label {
-    display: block;
-    margin-bottom: 10px;
-}
-
-input {
-  position: absolute;
-  clip: rect(0 0 0 0);
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-}
-
-button {
-    font-size: 14px;
-}
-
-#file:focus ~ label {
-    border: 1px solid #e2e2e2;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
 }
 
 .card {
-  width: 600px;
+    max-width: 600px;
+    width: 95%;
+    margin: 20px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-.input__wrapper {
-  display: inline-block;
+/* Стили для progress bar */
+progress {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    margin: 20px 0;
+    overflow: hidden;
 }
 
-.input__wrapper-button {
-  font-family: Golos, Arial, sans-serif;
-  font-size: 14px;
-  color: #fff;
-  background-color: #06f;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  box-sizing: border-box;
-  cursor: pointer;
-  padding: 8px 12px;
+/* Стили для неактивного состояния загрузки файла */
+.file-upload.disabled {
+    opacity: 0.7;
+    pointer-events: none;
 }
 
-.input__wrapper-button:hover {
-  background-color: #005ce6;
+/* Стиль кнопки при загрузке */
+#send.uploading {
+    background-color: #f44336 !important; /* Переопределяем другие стили */
+    animation: pulse 1.5s infinite;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto 0;
+    display: block !important; /* Убедимся, что кнопка отображается */
+}
+
+/* Убедимся, что кнопка видна при наведении */
+#send.uploading:hover {
+    background-color: #d32f2f !important;
+    transform: translateY(-1px);
+}
+
+/* Анимация пульсации для кнопки */
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+    70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+}
+
+/* Стили для прогресс-бара */
+progress {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+/* Общие стили для прогресс-бара в разных браузерах */
+progress,
+progress::-webkit-progress-bar {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+progress::-webkit-progress-value,
+progress::-moz-progress-bar {
+    background: linear-gradient(to right, #4CAF50, #66BB6A);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+/* Общие стили формы */
+form {
+    position: relative;
+    margin-top: 20px;
+}
+
+/* Скрытие стандартного input[type="file"] */
+input[type="file"] {
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    opacity: 0;
+}
+
+/* Стили для области загрузки файлов */
+.file-upload {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.file-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+    border: 2px dashed #4CAF50;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 150px;
+}
+
+.file-label:hover {
+    background-color: #f0f0f0;
+    border-color: #45a049;
+}
+
+.file-label:active {
+    transform: translateY(1px);
+}
+
+.file-icon {
+    margin-bottom: 15px;
+    opacity: 0.8;
+    color: #4CAF50;
+    transition: all 0.3s ease;
+}
+
+.file-icon svg {
+    width: 48px;
+    height: 48px;
+}
+
+.file-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-bottom: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.file-name {
+    color: #666;
+    font-size: 14px;
+    margin-top: 12px;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+/* Подсветка при перетаскивании файла */
+.file-label.drag-over {
+    background-color: #e8f5e9;
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    transform: translateY(-2px);
+    transition: all 0.2s ease-in-out;
+}
+
+/* Анимация иконки при наведении */
+.file-label:hover .file-icon {
+    animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+
+/* Стили для кнопки отправки */
+#send {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto 0;
+    padding: 12px 20px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+#send:hover {
+    background: #45a049;
+}
+
+#send:active {
+    transform: translateY(1px);
+}
+
+#send:disabled {
+    background: #BDBDBD;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Стили для статуса загрузки */
+.status {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 4px;
+    background: #f8f9fa;
+    color: #495057;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 480px) {
+    .card {
+        padding: 15px;
+    }
+    
+    .file-label {
+        padding: 20px 10px;
+        min-height: 120px;
+    }
+    
+    .file-button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    
+    .file-name {
+        font-size: 13px;
+    }
+    
+    #send {
+        width: 100%;
+        max-width: none;
+    }
 }
