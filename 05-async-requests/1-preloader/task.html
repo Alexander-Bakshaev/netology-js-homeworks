@@ -1,43 +1,48 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-    />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Анимация загрузки</title>
-    <link rel="stylesheet" href="../assets/css/style.css" />
-    <link rel="stylesheet" href="task.css" />
-  </head>
-  <body>
-    <header class="header">
-      <div class="logo__container">
+    <link rel="stylesheet" href="../assets/css/style.css"/>
+    <link rel="stylesheet" href="task.css"/>
+</head>
+<body>
+<header class="header">
+    <div class="logo__container">
         <a href="https://netology.ru/" class="logo__link"></a>
-      </div>
-      <h1 class="header__title">
-        Домашнее задание к занятию 3.1 «Асинхронные запросы». Анимация загрузки.
-        данных.
-      </h1>
-    </header>
-    <main class="content">
-      <div class="card">
+    </div>
+    <h1 class="header__title">
+        Домашнее задание к занятию 3.1 «Асинхронные запросы». Анимация загрузки данных.
+    </h1>
+</header>
+
+<main class="content">
+    <div class="card">
         <h1>Курс валют</h1>
         <div class="card-content">
-          <div class="controls">
-            <div id="last-updated" class="last-updated"></div>
-            <button id="refresh-btn" class="refresh-btn">
-              <span class="refresh-icon">↻</span> Обновить
-            </button>
-          </div>
-          <div id="loader" class="loader">
-            <img src="https://i.postimg.cc/66SGMVs5/mcru-ajax-loader.gif" alt="Загрузка...">
-          </div>
-          <div id="items"></div>
+            <!-- Блок управления -->
+            <div class="controls">
+                <div id="last-updated" class="last-updated"></div>
+                <button id="refresh-btn" class="refresh-btn">
+                    <span class="refresh-icon">↻</span> Обновить
+                </button>
+            </div>
+
+            <!-- Индикатор загрузки -->
+            <div id="loader" class="loader">
+                <div class="loader-spinner"></div>
+                <div class="loader-text">Загрузка...</div>
+            </div>
+
+            <!-- Контейнер для данных о валютах -->
+            <div id="items"></div>
         </div>
-      </div>
-    </main>
-    <script src="task.js"></script>
-  </body>
+    </div>
+</main>
+
+<script src="task.js"></script>
+</body>
 </html>
