@@ -33,12 +33,12 @@ progress {
 
 /* Стиль кнопки при загрузке */
 #send.uploading {
-    background-color: #f44336 !important; /* Переопределяем другие стили */
+    background-color: #f44336 !important;
     animation: pulse 1.5s infinite;
     width: 100%;
     max-width: 200px;
     margin: 20px auto 0;
-    display: block !important; /* Убедимся, что кнопка отображается */
+    display: block !important;
 }
 
 /* Убедимся, что кнопка видна при наведении */
@@ -224,21 +224,21 @@ input[type="file"] {
     .card {
         padding: 15px;
     }
-    
+
     .file-label {
         padding: 20px 10px;
         min-height: 120px;
     }
-    
+
     .file-button {
         padding: 8px 16px;
         font-size: 14px;
     }
-    
+
     .file-name {
         font-size: 13px;
     }
-    
+
     #send {
         width: 100%;
         max-width: none;

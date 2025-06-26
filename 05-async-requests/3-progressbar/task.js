@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sendButton.classList.remove('uploading');
         fileUpload.classList.remove('disabled');
         progress.value = 0;
-        // Не сбрасываем xhr сразу, чтобы можно было обработать отмену
         if (xhr) {
             xhr = null;
         }
@@ -55,9 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Функция начала загрузки файла
     function startFileUpload() {
         isUploading = true;
-        // Уже обновляем в обработчике нажатия кнопки
-        // sendButton.textContent = 'Остановить';
-        // sendButton.classList.add('uploading');
         fileUpload.classList.add('disabled');
         statusElement.textContent = 'Начало загрузки...';
         progress.value = 0;
@@ -95,31 +91,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Сбрасываем форму и прогресс-бар через 3 секунды
                 setTimeout(() => {
                     form.reset();
-                    fileNameElement.textContent = 'Файл не выбран';
+                    fileNameElement.textContent = 'или перетащите его сюда';
                     statusElement.textContent = 'Выберите файл для загрузки';
-                    progress.value = 0; // Сбрасываем прогресс-бар только здесь
-                    sendButton.disabled = true; // Делаем кнопку неактивной, как при загрузке страницы
+                    progress.value = 0;
+                    sendButton.disabled = true;
                 }, 3000);
             } else {
                 statusElement.textContent = `❌ Ошибка: ${xhr.statusText || 'Неизвестная ошибка'}`;
-                console.error('Ошибка загрузки файла:', xhr.statusText);
                 resetUploadState();
             }
         };
 
         // Обработчик ошибки соединения
         xhr.onerror = function () {
-            if (xhr.statusText !== 'abort') { // Игнорируем ошибку отмены загрузки
+            if (xhr.statusText !== 'abort') {
                 statusElement.textContent = '❌ Ошибка соединения с сервером';
-                console.error('Ошибка соединения');
                 resetUploadState();
             }
         };
 
         // Обработчик отмены загрузки
         xhr.onabort = function () {
-            // Уже обрабатывается в основном обработчике
-            // Но на всякий случай сбрасываем состояние, если обработчик сработал
             if (isUploading) {
                 resetUploadState();
             }
@@ -130,26 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
             xhr.send(formData);
         } catch (error) {
             statusElement.textContent = '❌ Ошибка при отправке файла';
-            console.error('Ошибка при отправке:', error);
             resetUploadState();
         }
     }
 
-    // Обработчик выбора файла
-    fileInput.addEventListener('change', function () {
-        if (this.files.length > 0) {
-            const file = this.files[0];
-            const fileSize = (file.size / (1024 * 1024)).toFixed(2); // Размер в МБ
-            statusElement.textContent = `Выбран файл: ${file.name} (${fileSize} МБ)`;
-            document.querySelector('.file-name').textContent = file.name;
-            sendButton.disabled = false;
-        } else {
-            statusElement.textContent = 'Выберите файл для загрузки';
-            document.querySelector('.file-name').textContent = 'или перетащите его сюда';
-            sendButton.disabled = true;
-        }
-    });
-
+    
     // Предотвращаем стандартную отправку формы
     form.addEventListener('submit', function (event) {
         event.preventDefault();
