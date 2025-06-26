@@ -81,6 +81,7 @@ function displayResults(statistics) {
     resultsElement.innerHTML = '';
     const totalVotes = statistics.reduce((sum, item) => sum + item.votes, 0);
     
+    // Сначала создаем все элементы с нулевой шириной
     statistics.forEach(item => {
         const percentage = totalVotes > 0 ? ((item.votes / totalVotes) * 100).toFixed(1) : 0;
         
@@ -89,26 +90,28 @@ function displayResults(statistics) {
         resultItem.innerHTML = `
             <div>${item.answer}: <strong>${percentage}%</strong> (${item.votes} голосов)</div>
             <div class="result-bar">
-                <div class="result-fill" style="width: ${percentage}%"></div>
+                <div class="result-fill" style="width: 0"></div>
             </div>
         `;
         resultsElement.appendChild(resultItem);
     });
     
-    // Добавляем кнопку для нового опроса
+    // Затем анимируем до нужной ширины
+    requestAnimationFrame(() => {
+        const fills = document.querySelectorAll('.result-fill');
+        statistics.forEach((item, index) => {
+            const percentage = totalVotes > 0 ? ((item.votes / totalVotes) * 100).toFixed(1) : 0;
+            fills[index].style.width = `${percentage}%`;
+        });
+    });
+    
+    // Кнопка для нового опроса
     const newPollBtn = document.createElement('button');
     newPollBtn.className = 'poll__answer';
     newPollBtn.textContent = 'Проголосовать снова';
     newPollBtn.style.marginTop = '20px';
     newPollBtn.addEventListener('click', fetchPoll);
     resultsElement.appendChild(newPollBtn);
-    
-    // Анимируем заполнение полос
-    setTimeout(() => {
-        document.querySelectorAll('.result-fill').forEach(fill => {
-            fill.style.width = fill.style.width;
-        });
-    }, 100);
 }
 
 // Запускаем опрос при загрузке страницы 
