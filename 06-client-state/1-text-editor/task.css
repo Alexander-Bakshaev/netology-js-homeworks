@@ -1,10 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.card {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.card h1 {
+    margin: 0 0 20px;
+    text-align: center;
+    color: #333;
+    font-size: 1.5em;
+}
+
 textarea {
-    max-width: 100%;
     width: 100%;
-    display: block;
-    padding: 10px 20px;
+    min-height: 200px;
+    padding: 12px;
     margin: 0 0 20px 0;
-    font-family: Golos, Arial, sans-serif;
-    border: 1px solid #e2e2e2;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     box-sizing: border-box;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+button:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+.hint {
+    color: #666;
+    font-size: 13px;
+    font-style: italic;
 }
