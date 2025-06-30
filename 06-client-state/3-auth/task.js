@@ -14,9 +14,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработчик отправки формы
     signinForm.addEventListener('submit', function (event) {
-        // Собираем данные формы. Преобразовываем данные в строку для отправки
+        // Собираем данные формы
         event.preventDefault();
         const formData = new FormData(signinForm);
+        
+        // Проверяем заполненность полей
+        if (!formData.get('login') || !formData.get('password')) {
+            alert('Пожалуйста, заполните все поля');
+            return;
+        }
         const data = new URLSearchParams(formData).toString();
 
         // Отправляем данные на сервер
@@ -43,9 +49,13 @@ document.addEventListener('DOMContentLoaded', function () {
         })
 
         .catch(error => {
-            // Выводим сообщение об ошибке в случае ее наличия
-            console.error('Ошибка при отправке данных:', error);
-            alert('Произошла ошибка при авторизации');
+            // Обработка ошибок сети
+            if (!navigator.onLine) {
+                alert('Нет подключения к интернету');
+            } else {
+                console.error('Ошибка при отправке данных:', error);
+                alert('Произошла ошибка при авторизации');
+            }
         })
 
         .finally(() => {
@@ -61,8 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Функция для деавторизации (<button class="btn btn-exit" onclick="logout()">)
+// Функция для деавторизации
 function logout() {
+    if (!confirm('Вы уверены, что хотите выйти?')) {
+        return;
+    }
     localStorage.removeItem('user_id');
     welcomeBlock.classList.remove('welcome_active');
     signinBlock.classList.add('signin_active');

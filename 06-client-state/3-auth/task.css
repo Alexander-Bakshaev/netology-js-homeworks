@@ -37,8 +37,32 @@
   box-shadow: none;
 }
 
+.btn:hover:not(.btn-loading) {
+    background-color: #05d;
+}
+
 .btn-exit {
   margin-top: 15px;
+}
+
+.welcome {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.welcome_active {
+  display: block;
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .welcome {
