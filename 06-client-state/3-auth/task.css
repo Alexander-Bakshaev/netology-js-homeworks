@@ -1,48 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.card {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.card h1 {
+    margin: 0 0 20px;
+    text-align: center;
+    color: #333;
+    font-size: 1.5em;
+}
+
 .signin {
   display: none;
 }
+
 .signin_active {
   display: block;
 }
+
 .control {
     width: 100%;
-    display: block;
-    padding: 10px 20px;
+    padding: 12px;
     margin: 0 0 20px 0;
-    font-family: Golos, Arial, sans-serif;
-    border: 1px solid #e2e2e2;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.control:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
 .btn {
-  font-family: Golos, Arial, sans-serif;
-  color: #fff;
-  background-color: #06f;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  box-sizing: border-box;
-  cursor: pointer;
-  display: inline-block;
-  margin: 0 0 20px 0;
-  overflow: hidden;
-  outline: none;
-  padding: 8px 12px;
-  text-align: center;
-  transition: 0.3s ease;
-  text-decoration: none;
-  user-select: none;
-  vertical-align: top;
-  white-space: nowrap;
-  font-weight: 500;
-  box-shadow: none;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
 }
 
-.btn:hover:not(.btn-loading) {
-    background-color: #05d;
+.btn:hover {
+    background: #45a049;
 }
 
-.btn-exit {
-  margin-top: 15px;
+.btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+.btn-loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .welcome {
@@ -63,6 +90,10 @@
     to {
         opacity: 1;
     }
+}
+
+.btn-exit {
+  margin-top: 15px;
 }
 
 .welcome {
