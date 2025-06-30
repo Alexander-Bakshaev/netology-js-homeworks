@@ -68,6 +68,12 @@ document.addEventListener('DOMContentLoaded', function () {
     function showWelcome(userId) {
         userIdSpan.textContent = userId;
         welcomeBlock.classList.add('welcome_active');
+        
+        // Скрываем заголовок "Авторизация"
+        const title = document.querySelector('.card > h1');
+        if (title) {
+            title.style.display = 'none';
+        }
     }
 });
 
@@ -79,4 +85,10 @@ function logout() {
     localStorage.removeItem('user_id');
     welcomeBlock.classList.remove('welcome_active');
     signinBlock.classList.add('signin_active');
+    
+    // Показываем заголовок "Авторизация" при выходе
+    const title = document.querySelector('.card > h1');
+    if (title) {
+        title.style.display = 'block';
+    }
 }
